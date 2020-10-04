@@ -1,0 +1,7 @@
+.jumbotron {
+  /* image taken from https://www.partycity.com/animated-billy-the-puppet-trike---jigsaw-871065.html and made semi-transparent */
+  background-image: url("./Jigsaw.jpg");
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
