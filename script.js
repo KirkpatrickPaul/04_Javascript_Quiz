@@ -28,39 +28,64 @@ var questions = [
 
 var jumbotronEl = document.querySelector(".jumbotron");
 var startButtonEl = document.getElementById("start-button");
+var questionContainerEl = document.getElementById("question-container")
+var timerEl = document.getElementById("timer")
+var highScoreEl = document.getElementById("high-score")
 
-function doQuestion1() {
+function wrongAnswer() {
+
+}
+
+function doQuestions() {
   jumbotronEl.remove();
-  var questionContainer = document.createElement("div");
   var questionCard = document.createElement("div");
   var cardBody = document.createElement("div");
-  var cardTitle = document.createElement("h5");
+  var questionTitle = document.createElement("h5");
+  var answerTitle = document.createElement("h5");
   var questionValue = document.createElement("p");
-  questionContainer.setAttribute("class", "d-flex justify-content-center");
+  questionContainerEl.setAttribute("class", "d-flex justify-content-center");
   questionCard.setAttribute("class", "card");
   questionCard.setAttribute("style", "width: 55rem;");
   cardBody.setAttribute("class", "card-body");
-  cardTitle.setAttribute("class", "card-title");
-  cardTitle.textContent = "Question:";
-  cardBody.appendChild(cardTitle);
+  questionTitle.setAttribute("class", "card-title");
+  answerTitle.setAttribute("class", "card-title");
+  questionTitle.textContent = "Question:";
+  answerTitle.textContent = "Answer:";
+  cardBody.appendChild(questionTitle);
   cardBody.appendChild(questionValue);
+  cardBody.appendChild(answerTitle)
   questionCard.appendChild(cardBody);
-  questionContainer.appendChild(questionCard);
-  document.body.appendChild(questionContainer);
+  questionContainerEl.appendChild(questionCard);
 
-  for (var i=0; i<questions.length; i++) {
-    var currentQuestion = questions[i]
-    questionValue.textContent = currentQuestion.question;
-    currentQuestion.choices.forEach(function(choice, j){
-      var button = document.createElement("button")
-      button.setAttribute("class", "btn btn-primary btn-large btn-block justify-content-left");
-      button.textContent = choice;
-      // value set to choice so it's easy to check for the right answer with rightAnswer
-      button.setAttribute("value", choice)
-      cardBody.appendChild(button);
-    })
-  }
-
+  var i = 0
+  function nextQuestion() {
+    if (i<questions.length) {
+      var currentQuestion = questions[i]
+      questionValue.textContent = currentQuestion.question;
+      currentQuestion.choices.forEach(function(choice){
+        var button = document.createElement("button");
+        button.setAttribute("class", "btn btn-primary btn-large btn-block justify-content-left");
+        button.textContent = choice;
+        // value set to choice so it's easy to check for the right answer with rightAnswer
+        button.setAttribute("value", choice);
+        cardBody.appendChild(button);
+      });
+    };
+  };
+  nextQuestion()
+  cardBody.addEventListener("click", function(event){
+    if (event.target.matches("button")) {
+      for (var j=0; j<cardBody.childElementCount; j++) {
+        cardBody.removeChild[j+2];
+      }
+      nextQuestion()
+    }
+  });
 };
 
-startButtonEl.addEventListener("click", doQuestion1);
+startButtonEl.addEventListener("click", doQuestions);
+// cardBody.addEventListener("click", function(){
+//   if (target.matches("btn")) {
+//     console.log("click")
+//   }
+// });
