@@ -1,18 +1,33 @@
 // change timeLeft to change how much time is on the starting timer
 var timeLeft = 100;
 
-// The array that holds the questions should always be strings in this order:
-//[question, right answer, wrong answer, wrong answer, wrong answer]
-// the Javascript checks for "all of the above" answers and moves them to the bottom, but otherwise randomizes answers. 
-// Still put the correct answer as object[1] in the array.
-var question1 = ["What does HTML stand for?", "HyperText Markup Language", "Hollistic Text and Menu Language", "HyperText Menu Language", "Hippocampus, Thyroid, Metacarpals, and Lymphatic systems"];
-var question2 = ["I want to change the color scheme of my wepage. Which would I most likely need to change?", "The CSS", "The HTML", "The Javascript", "The DOM"];
-var question3 = ["In Chrome Dev Tools, I'm able to inspect which of the following?", "All of the above", "The HTML", "The Javascript", "Event Listeners"];
-var question4 = ["What is Bootstrap's design model?", "Mobile first", "Rounded corners", "Descending order of importance", "Make it obvious"];
+// The choices key inside the object for the questions should always include the correct answer, as well as putting it with the rightAnswer key.
+
+var questions = [
+  {
+    question: "What does HTML stand for?",
+    choices: ["HyperText Markup Language", "Hollistic Text and Menu Language", "HyperText Menu Language", "Hippocampus, Thyroid, Metacarpals, and Lymphatic systems"],
+    rightAnswer: "HyperText Markup Language"
+  },
+  {
+    question: "I want to change the color scheme of my wepage. Which would I most likely need to change?",
+    choices: ["The CSS", "The HTML", "The Javascript", "The DOM"],
+    rightAnswer: "The HTML"
+  },
+  {
+    question: "In Chrome Dev Tools, I'm able to inspect which of the following?",
+    choices: ["The HTML", "The Javascript", "Event Listeners", "All of the above"],
+    rightAnswer: "All of the above"
+  },
+  {
+    question: "What is Bootstrap's design model?",
+    choices: ["Mobile first", "Rounded corners", "Descending order of importance", "Make it obvious"],
+    rightAnswer: "Mobile first"
+  }
+];
 
 var jumbotronEl = document.querySelector(".jumbotron");
 var startButtonEl = document.getElementById("start-button");
-
 
 function doQuestion1() {
   jumbotronEl.remove();
@@ -32,6 +47,20 @@ function doQuestion1() {
   questionCard.appendChild(cardBody);
   questionContainer.appendChild(questionCard);
   document.body.appendChild(questionContainer);
+
+  for (var i=0; i<questions.length; i++) {
+    var currentQuestion = questions[i]
+    questionValue.textContent = currentQuestion.question;
+    currentQuestion.choices.forEach(function(choice, j){
+      var button = document.createElement("button")
+      button.setAttribute("class", "btn btn-primary btn-large btn-block justify-content-left");
+      button.textContent = choice;
+      // value set to choice so it's easy to check for the right answer with rightAnswer
+      button.setAttribute("value", choice)
+      cardBody.appendChild(button);
+    })
+  }
+
 };
 
 startButtonEl.addEventListener("click", doQuestion1);
