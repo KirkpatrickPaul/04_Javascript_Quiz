@@ -1,5 +1,8 @@
-// change timeLeft to change how much time is on the starting timer
+// change timeLeft to change how much time is on the starting timer.
 var timeLeft = 100;
+
+//change penalty to change how much time is subtracted for a wrong answer.
+var penalty = 5;
 
 // The choices key inside the object for the questions should always include the correct answer, as well as putting it with the rightAnswer key.
 
@@ -11,7 +14,7 @@ var questions = [
   },
   {
     question: "I want to change the color scheme of my wepage. Which would I most likely need to change?",
-    choices: ["The CSS", "The HTML", "The Javascript", "The DOM"],
+    choices: ["The HTML", "The CSS", "The Javascript", "The DOM"],
     rightAnswer: "The HTML"
   },
   {
@@ -31,18 +34,48 @@ var startButtonEl = document.getElementById("start-button");
 var questionContainerEl = document.getElementById("question-container")
 var timerEl = document.getElementById("timer")
 var highScoreEl = document.getElementById("high-score")
+var questionCard = document.createElement("div");
+var cardBody = document.createElement("div");
+var questionTitle = document.createElement("h5");
+var answerTitle = document.createElement("h5");
+var questionValue = document.createElement("p")
+var answerValue = document.createElement("p");
+
+var i = 0
+function nextQuestion() {
+  while (answerValue.hasChildNodes()) {
+    answerValue.removeChild(answerValue.firstChild)
+  }
+  if (i<questions.length) {
+    var currentQuestion = questions[i]
+    questionValue.textContent = currentQuestion.question;
+    currentQuestion.choices.forEach(function(choice){
+      var button = document.createElement("button");
+      button.setAttribute("class", "btn btn-primary btn-large btn-block justify-content-left");
+      button.textContent = choice;
+      // value set to choice so it's easy to check for the right answer with rightAnswer
+      button.setAttribute("value", choice);
+      answerValue.appendChild(button);
+    });
+  };
+  i++
+};
+
+function countdown() {
+
+}
 
 function wrongAnswer() {
 
 }
 
-function doQuestions() {
+function leaderboard() {
+
+}
+
+function startQuestions() {
   jumbotronEl.remove();
-  var questionCard = document.createElement("div");
-  var cardBody = document.createElement("div");
-  var questionTitle = document.createElement("h5");
-  var answerTitle = document.createElement("h5");
-  var questionValue = document.createElement("p");
+  alert("You have " + timeLeft + " seconds to complete the quiz. Every wrong answer removes five seconds of time. You'll have to be fast to get the high-score!");
   questionContainerEl.setAttribute("class", "d-flex justify-content-center");
   questionCard.setAttribute("class", "card");
   questionCard.setAttribute("style", "width: 55rem;");
@@ -53,39 +86,21 @@ function doQuestions() {
   answerTitle.textContent = "Answer:";
   cardBody.appendChild(questionTitle);
   cardBody.appendChild(questionValue);
-  cardBody.appendChild(answerTitle)
+  cardBody.appendChild(answerTitle);
+  cardBody.appendChild(answerValue);
   questionCard.appendChild(cardBody);
   questionContainerEl.appendChild(questionCard);
-
-  var i = 0
-  function nextQuestion() {
-    if (i<questions.length) {
-      var currentQuestion = questions[i]
-      questionValue.textContent = currentQuestion.question;
-      currentQuestion.choices.forEach(function(choice){
-        var button = document.createElement("button");
-        button.setAttribute("class", "btn btn-primary btn-large btn-block justify-content-left");
-        button.textContent = choice;
-        // value set to choice so it's easy to check for the right answer with rightAnswer
-        button.setAttribute("value", choice);
-        cardBody.appendChild(button);
-      });
-    };
-  };
-  nextQuestion()
-  cardBody.addEventListener("click", function(event){
-    if (event.target.matches("button")) {
-      for (var j=0; j<cardBody.childElementCount; j++) {
-        cardBody.removeChild[j+2];
-      }
-      nextQuestion()
-    }
-  });
+  nextQuestion();
+  countdown();
 };
 
-startButtonEl.addEventListener("click", doQuestions);
-// cardBody.addEventListener("click", function(){
-//   if (target.matches("btn")) {
-//     console.log("click")
-//   }
-// });
+startButtonEl.addEventListener("click", startQuestions);
+cardBody.addEventListener("click", function(event){
+  if (event.target.matches("button")) {
+    if (i<questions.length){
+      nextQuestion()
+      } else {
+        leaderboard()
+      }      
+  }
+});
