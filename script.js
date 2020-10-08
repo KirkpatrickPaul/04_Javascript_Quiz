@@ -38,10 +38,11 @@ var questionCard = document.createElement("div");
 var cardBody = document.createElement("div");
 var questionTitle = document.createElement("h5");
 var answerTitle = document.createElement("h5");
-var questionValue = document.createElement("p")
+var questionValue = document.createElement("p");
 var answerValue = document.createElement("p");
+var timerContainer = document.createElement("h4");
 
-var i = 0
+var i = 0;
 function nextQuestion() {
   while (answerValue.hasChildNodes()) {
     answerValue.removeChild(answerValue.firstChild)
@@ -51,22 +52,38 @@ function nextQuestion() {
     questionValue.textContent = currentQuestion.question;
     currentQuestion.choices.forEach(function(choice){
       var button = document.createElement("button");
-      button.setAttribute("class", "btn btn-primary btn-large btn-block justify-content-left");
+      button.setAttribute("class", "btn btn-primary btn-large btn-block text-left");
       button.textContent = choice;
-      // value set to choice so it's easy to check for the right answer with rightAnswer
-      button.setAttribute("value", choice);
+     
+     // ID set to choice so it's easy to check for the right answer with rightAnswer
+      if (choice == questions[i].rightAnswer) {
+
+      button.setAttribute("id", "correct");
+
+      };
       answerValue.appendChild(button);
     });
   };
   i++
 };
-
+var interval;
 function countdown() {
-
+  if (timeLeft > 0) {
+    inverval = setInterval(function() {
+      timeLeft--;
+      timerContainer.setAttribute("class", "alert alert-warning");
+      timerContainer.textContent = "Time Remaining: " + timeLeft
+    }, 1000);
+  } else {
+    interval = timeLeft
+    leaderboard()
+  }
 }
 
 function wrongAnswer() {
-
+timeLeft = timeLeft - penalty
+timerContainer.setAttribute("class", "alert alert-danger");
+timerContainer.textContent = "Time Remaining: " + timeLeft
 }
 
 function leaderboard() {
@@ -90,6 +107,11 @@ function startQuestions() {
   cardBody.appendChild(answerValue);
   questionCard.appendChild(cardBody);
   questionContainerEl.appendChild(questionCard);
+  timerEl.setAttribute("class", "d-flex justify-content-end");
+  timerContainer.setAttribute("style", "width: 15 rem")
+  timerEl.appendChild(timerContainer);
+  timerContainer.setAttribute("class", "alert alert-warning");
+  timerContainer.textContent = "Time Remaining: " + timeLeft
   nextQuestion();
   countdown();
 };
@@ -97,10 +119,22 @@ function startQuestions() {
 startButtonEl.addEventListener("click", startQuestions);
 cardBody.addEventListener("click", function(event){
   if (event.target.matches("button")) {
-    if (i<questions.length){
-      nextQuestion()
-      } else {
-        leaderboard()
-      }      
+    //for right answers
+    if (event.target.matches("#correct")) {
+      if (i<questions.length){
+        nextQuestion()
+        return
+        } else {
+          leaderboard()
+          return
+        }
+      }
+        //for wrong answers      
+      wrongAnswer()
+      if (i<questions.length){
+        nextQuestion()
+        } else {
+          leaderboard()
+        }
   }
 });
