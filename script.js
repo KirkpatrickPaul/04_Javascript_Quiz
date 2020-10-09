@@ -116,15 +116,18 @@ function wrongAnswer() {
 
 function leaderboard() {
   timerEl.remove();
-  questionTitle.remove();
-  questionValue.remove();
-  answerTitle.remove();
-  answerValue.remove();
+  questionCard.remove();
+  ContainerEl.setAttribute("class", "container");
   leaderboardTitle.setAttribute("class", "card-title text-center");
+  var leaderboardEmpty = document.createElement("br");
+  leaderboardEmpty.setAttribute("class", "container-fluid");
+  // leaderboardEmpty.textContent = "  ";
+  leaderboardBody.setAttribute("class", "d-flex row justify-content-center");
   leaderboardTitle.textContent = "Leaderboard!";
-  leaderboardTitle.appendChild(leaderboardBody);
-  cardBody.appendChild(leaderboardTitle);
-  var theLeaders = localStorage.getItem("leaderboard");
+  ContainerEl.appendChild(leaderboardTitle);
+  ContainerEl.appendChild(leaderboardEmpty);
+  ContainerEl.appendChild(leaderboardBody);
+  var theLeaders = window.localStorage.getItem("leaderboard");
   if (!theLeaders || theLeaders === "[]") {
     var userName = prompt(
       "Congratulations! Your score is " +
@@ -133,13 +136,49 @@ function leaderboard() {
     );
     if (userName !== false) {
       theLeaders = [{ name: userName, score: timeLeft }];
-      theLeaders.toString;
-      localStorage.setItem("leaderboard", theLeaders);
+      theLeaders.forEach(function (object) {
+        var nameEntry = document.createElement("h5");
+        nameEntry.setAttribute("class", "float-beginning text-right");
+        nameEntry.textContent = object.name;
+        var scoreEntry = document.createElement("h5");
+        scoreEntry.setAttribute("class", "float-end text-left");
+        scoreEntry.textContent = object.score;
+        leaderboardBody.appendChild(nameEntry);
+        leaderboardBody.appendChild(scoreEntry);
+      });
+      theLeaders = JSON.stringify(theLeaders);
+      window.localStorage.setItem("leaderboard", theLeaders);
     } else {
       theLeaders = [];
+      theLeaders = JSON.stringify(theLeaders);
+      window.localStorage.setItem("leaderboard", theLeaders);
     }
   } else {
     theLeaders = JSON.parse(theLeaders);
+    var userName = prompt(
+      "Congratulations! Your score is " +
+        timeLeft +
+        "! Please enter your name and check out the other players!"
+    );
+    if (userName !== false) {
+      theLeaders.unshift({ name: userName, score: timeLeft });
+      theLeaders.forEach(function (object) {
+        var nameEntry = document.createElement("h5");
+        nameEntry.setAttribute("class", "text-right mr-5");
+        nameEntry.textContent = object.name + ":";
+        var scoreEntry = document.createElement("h5");
+        scoreEntry.setAttribute("class", "text-left");
+        scoreEntry.textContent = object.score;
+        var emptySpace = document.createElement("div");
+        emptySpace.setAttribute("class", "container-fluid");
+        emptySpace.textContent = "     ";
+        leaderboardBody.appendChild(nameEntry);
+        leaderboardBody.appendChild(scoreEntry);
+        leaderboardBody.appendChild(emptySpace);
+      });
+      theLeaders = JSON.stringify(theLeaders);
+      window.localStorage.setItem("leaderboard", theLeaders);
+    }
   }
 }
 
@@ -150,7 +189,7 @@ function startQuestions() {
       TOTAL_TIME +
       " seconds to complete the quiz. Every wrong answer removes five seconds of time. You'll have to be fast to get the high-score!"
   );
-  ContainerEl.setAttribute("class", "d-flex justify-content-center");
+  ContainerEl.setAttribute("class", "d-flex container justify-content-center");
   questionCard.setAttribute("class", "card");
   questionCard.setAttribute("style", "width: 55rem;");
   cardBody.setAttribute("class", "card-body");
